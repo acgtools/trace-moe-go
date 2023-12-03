@@ -2,11 +2,12 @@ package tui
 
 import (
 	"github.com/acgtools/trace-moe-go/internal/search"
-	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type searchDoneMsg bool
+type successMsg struct {
+	results []*search.Result
+}
 
 type errMsg struct {
 	err error
@@ -18,28 +19,36 @@ func (e errMsg) Error() string {
 	return e.err.Error()
 }
 
-type resultMsg struct {
-	result *search.TraceMoeResponse
-}
-
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	var cmd tea.Cmd
+	var (
+		cmd  tea.Cmd
+		cmds []tea.Cmd
+	)
 
 	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		m.size = winSize{
+			width:  msg.Width,
+			height: msg.Height,
+		}
 	case tea.KeyMsg:
-		switch msg.Type {
-		case tea.KeyCtrlC:
+		if msg.String() == "q" {
 			return m, tea.Quit
 		}
+	case successMsg:
+		m.done = true
+		m.resList = newList(msg.results, m.size)
 	case errMsg:
-		m.err = msg
-		m.done = true
-	case resultMsg:
-		m.searchResult = msg
-		m.done = true
-	case spinner.TickMsg:
-		m.spinner, cmd = m.spinner.Update(msg)
+		m.err = msg.err
 	}
 
-	return m, cmd
+	m.spinner, cmd = m.spinner.Update(msg)
+	cmds = append(cmds, cmd)
+
+	if m.done {
+		m.resList, cmd = m.resList.Update(msg)
+		cmds = append(cmds, cmd)
+	}
+
+	return m, tea.Batch(cmds...)
 }

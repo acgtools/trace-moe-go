@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 )
 
-const fileSearchURL = "https://api.trace.moe/search"
+const fileSearchURL = "https://api.trace.moe/search?anilistInfo"
 
 func File(filePath string) (*TraceMoeResponse, error) {
 	var err error

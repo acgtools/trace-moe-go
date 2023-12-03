@@ -31,7 +31,7 @@ var fileCmd = &cobra.Command{
 			return errors.New("image cannot be a directory")
 		}
 
-		m := tui.NewModel(filePath, tui.File)
+		m := tui.New(filePath, tui.File)
 		var opts []tea.ProgramOption
 
 		// Always append alt screen program option.
