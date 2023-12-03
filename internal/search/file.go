@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log/slog"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -15,32 +14,21 @@ import (
 
 const fileSearchURL = "https://api.trace.moe/search"
 
-func File(filePath string) error {
+func File(filePath string) (*TraceMoeResponse, error) {
 	var err error
-
-	if !filepath.IsAbs(filePath) {
-		filePath, err = filepath.Abs(filePath)
-		if err != nil {
-			return fmt.Errorf("convert file path %q to absolute path: %w", filePath, err)
-		}
-	}
-
-	slog.Debug("file path", "path", filePath)
 
 	res, err := post(filePath)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	var traceResp TraceMoeResponse
 	err = json.Unmarshal(res, &traceResp)
 	if err != nil {
-		return fmt.Errorf("unmarshal response: %w", err)
+		return nil, fmt.Errorf("unmarshal response: %w", err)
 	}
 
-	fmt.Printf("%+v", traceResp)
-
-	return err
+	return &traceResp, err
 }
 
 func post(filePath string) ([]byte, error) {
@@ -77,8 +65,6 @@ func post(filePath string) ([]byte, error) {
 	}
 	req.Header.Set("Content-Type", mw.FormDataContentType())
 
-	slog.Debug("request", "method", req.Method, "header", req.Header)
-
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return res, fmt.Errorf("send post request to %q: %w", fileSearchURL, err)
@@ -96,7 +82,6 @@ func post(filePath string) ([]byte, error) {
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		slog.Warn("response", "status", resp.Status, "message", res)
 		return res, errors.New(resp.Status)
 	}
 

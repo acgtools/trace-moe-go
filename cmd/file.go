@@ -2,14 +2,12 @@ package cmd
 
 import (
 	"errors"
-	"log/slog"
+	"fmt"
 	"os"
 
-	"github.com/acgtools/trace-moe-go/internal/search"
-
+	"github.com/acgtools/trace-moe-go/internal/tui"
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
-
-	log "github.com/acgtools/trace-moe-go/pkg/log"
 )
 
 const minArgNum = 1
@@ -23,27 +21,27 @@ var fileCmd = &cobra.Command{
 			return errors.New("not enough arguments")
 		}
 
-		config, err := NewConfig()
+		filePath := args[0]
+		info, err := os.Lstat(filePath)
 		if err != nil {
+			return fmt.Errorf("invalid path: %w", err)
+		}
+
+		if info.IsDir() {
+			return errors.New("image cannot be a directory")
+		}
+
+		m := tui.NewModel(filePath, tui.File)
+		var opts []tea.ProgramOption
+
+		// Always append alt screen program option.
+		opts = append(opts, tea.WithAltScreen())
+
+		if _, err := tea.NewProgram(m, opts...).Run(); err != nil {
 			return err
 		}
 
-		logLevel, err := log.ParseLevel(config.Log.Level)
-		if err != nil {
-			return err //nolint:wrapcheck
-		}
-		logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-			Level: logLevel,
-			ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
-				if a.Key == slog.TimeKey {
-					return slog.Attr{}
-				}
-				return a
-			},
-		}))
-		slog.SetDefault(logger)
-
-		return search.File(args[0])
+		return nil
 	},
 }
 
