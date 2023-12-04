@@ -22,3 +22,5 @@ go.work
 
 # goland files
 .idea
+
+dist/
