@@ -9,9 +9,7 @@ builds:
       - CGO_ENABLED=0
     ldflags:
       - -s -w
-      - -X github.com/bookstairs/bookhunter/cmd.gitVersion={{ .Version }}
-      - -X github.com/bookstairs/bookhunter/cmd.gitCommit={{ .Commit }}
-      - -X github.com/bookstairs/bookhunter/cmd.buildDate={{ .Date }}
+      - -X github.com/acgtools/trace-moe-go/cmd.version={{ .Version }}
     goos:
       - linux
       - windows
