@@ -25,6 +25,9 @@ jobs:
           go-version: stable
 
       - name: Release
+        env:
+          Version: $GITHUB_REF_NAME
+          GITHUB_TOKEN: ${{ secrets.TRACE_MOE_GO_TOKEN }}
         uses: goreleaser/goreleaser-action@v5
         with:
           distribution: goreleaser

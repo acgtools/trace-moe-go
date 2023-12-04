@@ -24,4 +24,4 @@ write `N/A` if there isn's
  - Version:
 
 **Additional context**
-Add any other context about the problem here.
+<!-- Add any other context about the problem here. -->
