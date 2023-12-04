@@ -10,9 +10,13 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/acgtools/trace-moe-go/internal/util"
 )
 
-const fileSearchURL = "https://api.trace.moe/search?anilistInfo"
+const (
+	fileSearchURL = "https://api.trace.moe/search?anilistInfo"
+)
 
 func File(filePath string) (*TraceMoeResponse, error) {
 	var err error
@@ -27,7 +31,6 @@ func File(filePath string) (*TraceMoeResponse, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unmarshal response: %w", err)
 	}
-
 	return &traceResp, err
 }
 
@@ -69,12 +72,12 @@ func post(filePath string) ([]byte, error) {
 	if err != nil {
 		return res, fmt.Errorf("send post request to %q: %w", fileSearchURL, err)
 	}
-	defer wclose(resp.Body, &err)
+	defer util.Close(resp.Body, &err)
 
 	if err != nil {
 		return res, fmt.Errorf("send post request to %q: %w", fileSearchURL, err)
 	}
-	defer wclose(resp.Body, &err)
+	defer util.Close(resp.Body, &err)
 
 	res, err = io.ReadAll(resp.Body)
 	if err != nil {
@@ -86,11 +89,4 @@ func post(filePath string) ([]byte, error) {
 	}
 
 	return res, err
-}
-
-func wclose(w io.Closer, err *error) {
-	// respect the existed err
-	if e := w.Close(); *err == nil {
-		*err = e
-	}
 }

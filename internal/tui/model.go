@@ -2,6 +2,7 @@ package tui
 
 import (
 	"fmt"
+	"math"
 	"strings"
 
 	"github.com/acgtools/trace-moe-go/internal/search"
@@ -19,18 +20,44 @@ const (
 )
 
 type Model struct {
-	spinner    spinner.Model
-	dataSrc    string
-	searchType searchType
-	done       bool
-	err        error
-	resList    list.Model
-	size       winSize
+	spinner      spinner.Model
+	dataSrc      string
+	searchType   searchType
+	resp         *search.TraceMoeResponse
+	image        string
+	matchPreview string
+	ready        bool
+	err          error
+	resList      list.Model
+	info         animeInfo
+	size         size
+	imgWidth     int
 }
 
-type winSize struct {
+type size struct {
 	width  int
 	height int
+}
+
+type animeInfo struct {
+	anilistID int
+	names     []string
+	isAdult   bool
+}
+
+func newAnimeInfo(ani *search.Anilist) animeInfo {
+	var names []string
+	names = append(names,
+		ani.Title.Native,
+		ani.Title.Romaji,
+		ani.Title.English)
+	names = append(names, ani.Synonyms...)
+
+	return animeInfo{
+		anilistID: ani.ID,
+		names:     names,
+		isAdult:   ani.IsAdult,
+	}
 }
 
 var _ tea.Model = Model{}
@@ -58,22 +85,17 @@ func (i resultItem) Description() string {
 	var sb strings.Builder
 
 	sb.WriteString(fmt.Sprintf("Episode: %d\n", i.episode))
-	sb.WriteString(fmt.Sprintf("From %f to %f\n", i.from, i.to))
-	sb.WriteString(fmt.Sprintf("Similarity: %f", i.similarity))
+	sb.WriteString(fmt.Sprintf("From %s to %s\n", formatTime(i.from), formatTime(i.to)))
+	sb.WriteString(fmt.Sprintf("Similarity: %.3f%s", i.similarity*100, "%"))
 
 	return sb.String()
 }
 
 func (i resultItem) FilterValue() string { return i.name }
 
-func newList(results []*search.Result, size winSize) list.Model {
+func newList(results []*search.Result, size size) list.Model {
 	items := make([]list.Item, 0, len(results))
 	for i, res := range results {
-		const minSim = 0.9
-		if res.Similarity < minSim {
-			continue
-		}
-
 		item := resultItem{
 			index:      i,
 			episode:    res.Episode,
@@ -88,8 +110,15 @@ func newList(results []*search.Result, size winSize) list.Model {
 	delegate := list.NewDefaultDelegate()
 	delegate.SetHeight(4)
 
-	l := list.New(items, delegate, size.width, size.height)
+	w, h := listStyle.GetFrameSize()
+	l := list.New(items, delegate, size.width-w, size.height-h)
 	l.Title = "Result list"
 
 	return l
+}
+
+func formatTime(secs float64) string {
+	seconds := int(math.Round(secs))
+	m, s := seconds/60, seconds%60
+	return fmt.Sprintf("%d:%d", m, s)
 }
