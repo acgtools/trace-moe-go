@@ -14,8 +14,8 @@ const minArgNum = 1
 
 var fileCmd = &cobra.Command{
 	Use:   "file",
-	Short: "",
-	Long:  ``,
+	Short: "search image by file",
+	Long:  `file [flags] [image file path]`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) < minArgNum {
 			return errors.New("not enough arguments")

@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var version = "dev"
@@ -17,13 +16,9 @@ var rootCmd = &cobra.Command{
 	Version: version,
 }
 
-func init() {
-	rootCmd.PersistentFlags().String("log-level", "debug", "log level, options: debug, info, warn, error")
-
-	_ = viper.BindPFlag("log.level", rootCmd.PersistentFlags().Lookup("log-level"))
-}
-
 func Execute() {
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
+
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
