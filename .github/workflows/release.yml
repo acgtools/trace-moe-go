@@ -1,0 +1,52 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  build:
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Download dependency
+        run:  go mod tidy
+
+      - name: Linux amd64
+        env:
+          GOOS: linux
+          GOARCH: amd64
+        run: |-
+          go build -v -ldflags "-s -w -X github.com/acgtools/sub-renamer/cmd.version=$GITHUB_REF_NAME" -o sub-renamer
+          tar -zcvf ./sub_renamer_linux_amd64.tar.gz ./README.md ./LICENSE ./sub-renamer
+
+      - name: Windows amd64
+        env:
+          GOOS: windows
+          GOARCH: amd64
+        run: |-
+          go build -v -ldflags "-s -w -X github.com/acgtools/sub-renamer/cmd.version=$GITHUB_REF_NAME" -o sub-renamer.exe
+          zip ./sub_renamer_windows_amd64.zip ./README.md ./LICENSE ./sub-renamer.exe
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          draft: true
+          files: |-
+            sub_renamer_windows_amd64.zip
+            sub_renamer_linux_amd64.tar.gz

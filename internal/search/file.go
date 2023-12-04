@@ -2,6 +2,7 @@ package search
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -62,13 +63,13 @@ func post(filePath string) ([]byte, error) {
 		return res, fmt.Errorf("close multipart wirter: %w", err)
 	}
 
-	req, err := http.NewRequest(http.MethodPost, fileSearchURL, body)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodPost, fileSearchURL, body)
 	if err != nil {
 		return res, fmt.Errorf("create request: %w", err)
 	}
 	req.Header.Set("Content-Type", mw.FormDataContentType())
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := http.DefaultClient.Do(req) //nolint:bodyclose
 	if err != nil {
 		return res, fmt.Errorf("send post request to %q: %w", fileSearchURL, err)
 	}
@@ -81,7 +82,7 @@ func post(filePath string) ([]byte, error) {
 
 	res, err = io.ReadAll(resp.Body)
 	if err != nil {
-		return res, fmt.Errorf("read repsonse: %w", err)
+		return res, fmt.Errorf("read respsonse: %w", err)
 	}
 
 	if resp.StatusCode != http.StatusOK {

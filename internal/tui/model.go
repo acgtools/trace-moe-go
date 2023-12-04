@@ -8,7 +8,6 @@ import (
 	"github.com/acgtools/trace-moe-go/internal/search"
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/spinner"
-
 	tea "github.com/charmbracelet/bubbletea"
 )
 

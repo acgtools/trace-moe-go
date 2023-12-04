@@ -19,7 +19,7 @@ func (e errMsg) Error() string {
 	return e.err.Error()
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:cyclop
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd

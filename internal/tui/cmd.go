@@ -8,15 +8,12 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/acgtools/trace-moe-go/internal/search"
 	"github.com/acgtools/trace-moe-go/internal/util"
-
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/disintegration/imaging"
 	"github.com/lucasb-eyer/go-colorful"
-
-	"github.com/acgtools/trace-moe-go/internal/search"
-
-	tea "github.com/charmbracelet/bubbletea"
 )
 
 func traceMoe(dataSrc string, typ searchType) tea.Cmd {
@@ -91,7 +88,7 @@ func toString(width int, img image.Image) string {
 }
 
 func fetchCoverImage(imgURL string) (io.ReadCloser, error) {
-	resp, err := http.Get(imgURL)
+	resp, err := http.Get(imgURL) //nolint:gosec,noctx
 	if err != nil {
 		return nil, err
 	}
