@@ -4,6 +4,14 @@
 
 如果这个程序对你有所帮助，可以帮忙给一个 star，谢谢 OwO。
 
+<!-- 
+  If you want to use your own Moe-Counter
+  please refer to the tutorial 
+  in its original repo: https://github.com/journey-ad/Moe-Counter
+  and deploy it to the Replit or Glitch
+-->
+![](https://political-capable-roll.glitch.me/get/@acgtooltracemoego?theme=rule34)
+
 ## 安装
 
 ### 使用 `go`
@@ -58,7 +66,7 @@ Active code page: 65001
 
 此方法将在`cmd` 启动时自动执行 `@chcp 65001>nul`。
 
-### Linux
+#### Linux
 
 ```sh
 $ echo $LANG

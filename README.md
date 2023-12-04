@@ -6,6 +6,14 @@ A TUI app for finding anime scenes by image using [trace.moe](https://trace.moe/
 
 If this tool is helpful to you, please consider giving it a star. Thank you OwO.
 
+<!-- 
+  If you want to use your own Moe-Counter
+  please refer to the tutorial 
+  in its original repo: https://github.com/journey-ad/Moe-Counter
+  and deploy it to the Replit or Glitch
+-->
+![](https://political-capable-roll.glitch.me/get/@acgtooltracemoego?theme=rule34)
+
 ## Installation
 
 ### Using `go`
@@ -60,7 +68,7 @@ If `Autorun` is not present, you can add a `New String`.
 
 This approach will auto-execute `@chcp 65001>nul` when `cmd` starts.
 
-### Linux
+#### Linux
 
 ```sh
 $ echo $LANG
