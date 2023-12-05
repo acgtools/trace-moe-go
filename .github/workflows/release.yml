@@ -22,12 +22,13 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: stable
+          go-version-file: go.mod
 
       - name: Release
         env:
           Version: $GITHUB_REF_NAME
           GITHUB_TOKEN: ${{ secrets.TRACE_MOE_GO_TOKEN }}
+
         uses: goreleaser/goreleaser-action@v5
         with:
           distribution: goreleaser
