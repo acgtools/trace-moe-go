@@ -4,7 +4,11 @@ English | [简体中文](./README_ZH_CN.md)
 
 A TUI app for finding anime scenes by image using [trace.moe](https://trace.moe/) API.
 
-If this tool is helpful to you, please consider giving it a star. Thank you OwO.
+If this tool is helpful to you, please consider giving it a star (o゜▽゜)o☆ . Thank you OwO. 
+
+> Random Wink OvO
+
+<img align="left" src="https://waifu-pics-black.vercel.app/sfw?eps=wink" />
 
 <!-- 
   If you want to use your own Moe-Counter

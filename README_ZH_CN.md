@@ -2,7 +2,11 @@
 
 用于搜索番剧图片来源的 TUI 应用，使用 [trace.moe](https://trace.moe/) API。
 
-如果这个程序对你有所帮助，可以帮忙给一个 star，谢谢 OwO。
+如果这个程序对你有所帮助，可以帮忙给一个 star (o゜▽゜)o☆ ，谢谢 OwO。
+
+> 随机 Wink OvO
+
+<img align="left" src="https://waifu-pics-black.vercel.app/sfw?eps=wink" />
 
 <!-- 
   If you want to use your own Moe-Counter
