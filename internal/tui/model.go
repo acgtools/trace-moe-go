@@ -71,7 +71,7 @@ func New(dataSrc string, typ searchType) Model {
 
 type resultItem struct {
 	index      int
-	episode    int
+	episode    search.Episode
 	name       string
 	from       float64
 	to         float64
@@ -83,7 +83,7 @@ func (i resultItem) Title() string { return i.name }
 func (i resultItem) Description() string {
 	var sb strings.Builder
 
-	sb.WriteString(fmt.Sprintf("Episode: %d\n", i.episode))
+	sb.WriteString(fmt.Sprintf("Episode: %s\n", i.episode))
 	sb.WriteString(fmt.Sprintf("From %s to %s\n", formatTime(i.from), formatTime(i.to)))
 	sb.WriteString(fmt.Sprintf("Similarity: %.3f%s", i.similarity*100, "%"))
 
