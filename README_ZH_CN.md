@@ -6,7 +6,7 @@
 
 > 随机 Wink OvO
 
-<img align="left" src="https://waifu-pics-black.vercel.app/sfw?eps=wink" />
+<img align="left" src="https://waifu-getter.vercel.app/sfw?eps=wink" />
 
 <br />
 <!-- 
