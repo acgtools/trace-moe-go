@@ -6,6 +6,7 @@
 
 > 随机 Wink OvO
 
+<!-- If you want to deploy your own service for random waifu. Check: https://github.com/dreamjz/waifu-getter -->
 <img src="https://waifu-getter.vercel.app/sfw?eps=wink" />
 
 <br />
